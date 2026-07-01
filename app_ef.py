@@ -87,7 +87,7 @@ def crear_embedding(texto, input_type="search_document"):
 
 def procesar_pdf(archivo_pdf, nombre_pdf):
     """Lee PDF, genera embeddings y guarda texto + PDF en MongoDB."""
-    st.info("📄 Leyendo PDF con informacion muy interesante...")
+    st.info("📄 Leyendo PDF...")
 
     texto = leer_pdf(archivo_pdf)
     if not texto:
@@ -109,7 +109,7 @@ def procesar_pdf(archivo_pdf, nombre_pdf):
     collection.insert_many(documentos)
 
     # Guardar PDF en GridFS (reemplaza a Backblaze)
-    st.info("📤 Esto se va para Monguito DB...")
+    st.info("📤 Guardando PDF en MongoDB...")
     if fs.exists({"filename": nombre_pdf}):
         for f in fs.find({"filename": nombre_pdf}):
             fs.delete(f._id)
@@ -180,12 +180,12 @@ Responde en español, de forma clara.
 # =======================
 
 st.set_page_config(page_title="ChatBot", page_icon="📚")
-st.title("📚 👀👀👀👀👀👀Chat de PDF: Te ayudo a aprobar de una forma fácil y dinámica 👀👀👀👀👀👀👀👀👀👀 " + USER)
+st.title("📚 Chat con PDFs en MongoDB + Gemini + Cohere: " + USER)
 
 archivo_pdf = st.file_uploader("📤 Sube un PDF", type=["pdf"])
 
 if archivo_pdf:
-    if st.button("Aprender.."):
+    if st.button("Procesar y guardar PDF"):
         with st.spinner("Procesando PDF..."):
             cantidad = procesar_pdf(archivo_pdf, archivo_pdf.name)
             st.success(f"Procesado: {cantidad} fragmentos generados y PDF guardado.")
